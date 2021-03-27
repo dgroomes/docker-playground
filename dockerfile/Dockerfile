@@ -10,5 +10,5 @@ COPY echo.jq /opt/docker-playground
 
 # Define an entrypoint and command. This is the default thing that will run when a container is started using this image.
 # They can be overridden via command line arguments.
-ENTRYPOINT ["jq", "--null-input", "-L", "/opt/docker-playground"]
-CMD ["include \"echo\"; {message: \"hi\"} | .message | echo"]
+ENTRYPOINT ["jq", "-L", "/opt/docker-playground"]
+CMD ["include \"echo\"; .message | echo"]

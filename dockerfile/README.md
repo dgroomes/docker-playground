@@ -1,7 +1,5 @@
 # dockerfile
 
-WORK IN PROGRESS
-
 An example project that builds a simple Docker image using a Dockerfile.
 
 ## Instructions
@@ -16,7 +14,7 @@ An example project that builds a simple Docker image using a Dockerfile.
 1. Start a container using the image and pass it a JSON document with a special "message" field:
   * 
   ```
-  echo '{ "message": "hello" }' | docker run --rm jq-echo
+  echo '{ "message": "hello" }' | docker run -i --rm jq-echo
   ```
   * You should see a response from the container printed to the terminal! It should say:
   ```
@@ -40,15 +38,14 @@ image with `ADD` and `RUN` commands.
   * `docker run --rm -it --entrypoint bash jq-echo`
 * Inspect the custom image (useful for debugging when experimenting with the "ENTRYPOINT"):
   * `docker inspect jq-echo`
-    
-## TODO
 
-This is not a finished project. It is a work in progress. Items include:
+## Wish List
 
-* The Docker container isn't taking standard input? That's possible right? Send the JSON message from the host into standard
-  input in the container instead of hardcoding the `{message: \"hi\"}` snippet in the Dockerfile. I can't figure out how
-  to make it work. 
+General clean-ups, TODOs and things I wish to implement for this project:
+
+* Create a GitHub Actions CI workflow to build the image and run the example  
 
 ## Referenced materials
 
 * [Docker official site: Dockerfile reference](https://docs.docker.com/engine/reference/builder/)
+* [jq docs](https://stedolan.github.io/jq/manual/)

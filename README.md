@@ -42,5 +42,5 @@ General clean-ups, TODOs and things I wish to implement for this project:
 * Add an example showing a "depends-on" relationship using a shell script instead of Docker Compose (because Docker Compose
   doesn't support the "depends_on" property since a long time)  
 * DONE Create a CI build in GitHub Actions
-* IN PROGRESS Add a Dockerfile example
+* DONE Add a Dockerfile example
 
