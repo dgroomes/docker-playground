@@ -2,6 +2,10 @@
 
 📚 Learning and exploring Docker <https://www.docker.com/>.
 
+> Accelerate how you build, share and run modern applications
+>
+> -- <cite>https://www.docker.com</cite>
+
 ## Standalone sub-projects
 
 This repository illustrates different concepts, patterns and examples via standalone sub-projects. Each sub-project is
@@ -23,6 +27,12 @@ A simple Docker Compose example.
 
 See the README in [compose/](compose/).
 
+### `dockerfile/`
+
+An example project that builds a simple Docker image using a Dockerfile.
+
+See the README in [dockerfile/](dockerfile/).
+
 ## Wish List
 
 General clean-ups, TODOs and things I wish to implement for this project:
@@ -31,5 +41,6 @@ General clean-ups, TODOs and things I wish to implement for this project:
 * Add non-Docker examples. (I hardly know anything about non-Docker container technology)
 * Add an example showing a "depends-on" relationship using a shell script instead of Docker Compose (because Docker Compose
   doesn't support the "depends_on" property since a long time)  
-* Create a CI build in GitHub Actions
+* DONE Create a CI build in GitHub Actions
+* IN PROGRESS Add a Dockerfile example
 
