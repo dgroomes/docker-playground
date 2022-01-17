@@ -40,7 +40,11 @@ General clean-ups, TODOs and things I wish to implement for this project:
 * DONE Add Docker Compose examples
 * Add non-Docker examples. (I hardly know anything about non-Docker container technology)
 * Add an example showing a "depends-on" relationship using a shell script instead of Docker Compose (because Docker Compose
-  doesn't support the "depends_on" property since a long time)  
+  doesn't support the "depends_on" property since a long time). UPDATE: `depends_on` is supported still, it just doesn't
+  do what you might think. It doesn't wait for an "is ready" check. Docker calls this fact out in the docs and describes
+  [strategies for controlling start up order](https://docs.docker.com/compose/startup-order/). Spoiler alert: it's not
+  slick, it requires custom shell scripting which of course may not be palatable if you wanted to used Docker images off-
+  the-shelf without having to make changes.
 * DONE Create a CI build in GitHub Actions
 * DONE Add a Dockerfile example
 

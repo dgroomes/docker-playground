@@ -4,16 +4,25 @@ A simple Docker Compose example.
 
 ## Instructions
 
-* `docker-compose up`
-* You should see something like:
-  ```
-  Recreating compose_my-busybox_1 ... done
-  Attaching to compose_my-busybox_1
-  my-busybox_1  | hello world!
-  compose_my-busybox_1 exited with code 0
-  ```
+Start a Docker container by running this command:
 
-### Referenced materials
+```shell
+docker-compose up
+```
+
+You should see something like:
+
+```
+$ docker-compose up
+[+] Running 2/2
+ ⠿ Network compose_default         Created                                                                                                                                                             0.2s
+ ⠿ Container compose-my-busybox-1  Created                                                                                                                                                             0.5s
+Attaching to compose-my-busybox-1
+compose-my-busybox-1  | hello world!
+compose-my-busybox-1 exited with code 0
+```
+
+## Reference
 
 * [BusyBox: The Swiss Army Knife of Embedded Linux](https://hub.docker.com/_/busybox)
 * [Docker official docs: *Overview of Docker Compose*](https://docs.docker.com/compose/)
