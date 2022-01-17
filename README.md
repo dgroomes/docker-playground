@@ -33,6 +33,12 @@ An example project that builds a simple Docker image using a Dockerfile.
 
 See the README in [dockerfile/](dockerfile/).
 
+### `introspective/`
+
+A Docker image that introspects Docker metadata and networking information about its environment.
+
+See the README in [introspective/](introspective/).
+
 ## Wish List
 
 General clean-ups, TODOs and things I wish to implement for this project:

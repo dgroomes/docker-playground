@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  introspecting-container-a:
+    build:
+      context: .
+    entrypoint:
+      - /usr/bin/env
+      - bash
+    stdin_open: true # The same effect as "docker run --interactive"
+    tty: true        # The same effect as "docker run --tty"
+  introspecting-container-b:
+    build:
+      context: .
+    entrypoint:
+      - /usr/bin/env
+      - bash
+    stdin_open: true
+    tty: true
