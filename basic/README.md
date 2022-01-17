@@ -4,9 +4,14 @@ A basic "hello world" example of Docker that starts a container, executes a comm
 
 ## Instructions
 
-* `./start.sh`
-* `./say-hello.sh`
-* `./stop.sh`
+Follow these instructions to create a container and interact with it.
+
+1. Create a Docker container
+   * `./start.sh`
+2. Execute a command from inside the container
+   * `./say-hello.sh`
+3. Stop the container
+   * `./stop.sh`
 
 ### Referenced materials
 
