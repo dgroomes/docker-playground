@@ -2,6 +2,7 @@
 
 A simple Docker Compose example.
 
+
 ## Instructions
 
 Start a Docker container by running this command:
@@ -12,7 +13,7 @@ docker-compose up
 
 You should see something like:
 
-```
+```text
 $ docker-compose up
 [+] Running 2/2
  ⠿ Network compose_default         Created                                                                                                                                                             0.2s
@@ -21,6 +22,7 @@ Attaching to compose-my-busybox-1
 compose-my-busybox-1  | hello world!
 compose-my-busybox-1 exited with code 0
 ```
+
 
 ## Reference
 
