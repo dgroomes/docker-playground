@@ -8,4 +8,5 @@ fi
 
 chmod +x tmp/jq
 
+# In the latest versions of Docker, BuildKit is enabled by default when using Docker Desktop. However, let's be explicit.
 DOCKER_BUILDKIT=1 docker build -t jq-echo .

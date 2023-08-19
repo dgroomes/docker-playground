@@ -64,3 +64,4 @@ hints in the configuration (`docker-compose.yml`) or hard coding service names i
 * [StackOverflow answer for "How can I get docker's container name from inside the container?"](https://stackoverflow.com/a/64790547/)
   * Reverse DNS lookup trick for finding the container's name. Does this only work for Docker Compose?
 * [Docker docs: "Container networking"](https://docs.docker.com/config/containers/container-networking)
+* [Docker docs: *BuildKit*](https://docs.docker.com/build/buildkit/)

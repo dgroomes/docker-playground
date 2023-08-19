@@ -42,8 +42,8 @@ Dockerfile is confusing in my opinion. See for example, this perplexing behavior
 
 * Jump into a Bash shell session in a Debian container and explore:
   * ```shell
-    docker run --rm -it debian:10 bash` to
-    ``
+    docker run --rm -it debian:12 bash
+    ```
 * Jump into a container of the custom Docker image and explore:
   * ```shell
     docker run --rm -it --entrypoint bash jq-echo
@@ -58,7 +58,8 @@ Dockerfile is confusing in my opinion. See for example, this perplexing behavior
 
 General clean-ups, TODOs and things I wish to implement for this project:
 
-* Create a GitHub Actions CI workflow to build the image and run the example  
+* [ ] Create a GitHub Actions CI workflow to build the image and run the example.
+* [ ] Show the image layers and the steps/instructions (what are they called?)
 
 
 ## Reference
