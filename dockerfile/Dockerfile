@@ -1,5 +1,5 @@
 # Extend the Debian Docker image. See https://hub.docker.com/_/debian
-FROM debian:10
+FROM debian:12
 
 # Copy over the jq binary
 COPY tmp/jq /usr/local/bin
