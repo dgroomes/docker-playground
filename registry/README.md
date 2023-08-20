@@ -52,4 +52,12 @@ General clean-ups, TODOs and things I wish to implement for this project:
 * [ ] Showcase the HTTP API. List images, get a manifest, etc.
 * [ ] Illustrate the "base image" and "extending image" prototypical use case and make sure image layers are actually
   re-used. This is my main goal for this subproject.
-* [ ] What kind of database is the registry using? Can we connect to it and query it?
+* [x] DONE What kind of database is the registry using? Can we connect to it and query it?
+   * It looks like it just writes to files. Let's connect and explore.
+   * ```shell
+     docker exec -it registry-registry-1 sh
+     ```
+   * ```shell
+     docker exec registry-registry-1 ls /var/lib/registry/docker/registry/v2/repositories
+     docker exec registry-registry-1 ls /var/lib/registry/docker/registry/v2/blobs/sha256
+     ```
