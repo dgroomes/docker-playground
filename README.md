@@ -56,7 +56,10 @@ General clean-ups, TODOs and things I wish to implement for this project:
 * [x] DONE Create a CI build in GitHub Actions
 * [x] DONE Add a Dockerfile example
 * [ ] Consider doing a `registry` subproject. Docker supports this with an [open source registry](https://github.com/distribution/distribution),
-  very cool.  
+  very cool. UPDATE: yes I definitely want to do this because the registry exposes an HTTP API that formally
+  (and completely?) implements the access to content-addressable entities (layers, manifests, configs). This HTTP API
+  should be legible, unlike the sometimes opaque and varied behavior of the `docker` CLI for commands like `inspect` (in
+  my opinion). The registry is especially authoritative because it implements [OCI Distribution Specification](https://github.com/opencontainers/distribution-spec).
 
 
 ## Reference
