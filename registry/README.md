@@ -35,10 +35,32 @@ Follow these instructions to host and interact a local Docker registry.
      docker image remove localhost:5000/my-busybox
      docker pull localhost:5000/my-busybox
      ```
-4. When finished, stop the registry
+4. Use the HTTP API to inspect all the components that are now in the registry.
+   * List all repositories with the following `curl` command.
+   * ```shell
+     curl -X GET http://localhost:5000/v2/_catalog
+     ```
+   * Drill into the `my-busybox` repository to list its tags.
+   * ```shell
+     curl -X GET http://localhost:5000/v2/my-busybox/tags/list
+     ```
+   * Get the manifest for the `my-busybox:latest` tag. Take care to request the v2 manifest schema.
+   * ```shell
+     curl -X GET http://localhost:5000/v2/my-busybox/manifests/latest -H "Accept: application/vnd.docker.distribution.manifest.v2+json"
+     ```
+   * Finally, let's look at the "configuration" object for the `my-busybox:latest` image. We have to very precise here
+     because images are not identified by their tags but by their digests. In our case, there is exactly one image for
+     the `my-busybox:latest` tag (there might be more if we created multiple `my-busybox:latest` images for different
+     architectures). You have to take the digest of the configuration object we found in the earlier manifest request.
+     With this value we can get the configuration object from the "blobs" endpoint.
+   * ```shell
+     curl -X GET http://localhost:5000/v2/my-busybox/blobs/sha256:fc9db2894f4e4b8c296b8c9dab7e18a6e78de700d21bc0cfaf5c78484226db9c
+     ```
+5. When finished, stop the registry
    * ```shell
      docker compose down
      ```
+
 
 
 ## Wish List
@@ -49,7 +71,7 @@ General clean-ups, TODOs and things I wish to implement for this project:
 * [x] DONE Copy a Docker image from the public Docker Hub to the local registry. This is basically what the example in the
   [official docs](https://docs.docker.com/registry/deploying/) does. 
 * [ ] Build a Docker image. Push it to the registry and pull it from the registry.
-* [ ] Showcase the HTTP API. List images, get a manifest, etc.
+* [x] DONE Showcase the HTTP API. List images, get a manifest, etc.
 * [ ] Illustrate the "base image" and "extending image" prototypical use case and make sure image layers are actually
   re-used. This is my main goal for this subproject.
 * [x] DONE What kind of database is the registry using? Can we connect to it and query it?
@@ -61,3 +83,8 @@ General clean-ups, TODOs and things I wish to implement for this project:
      docker exec registry-registry-1 ls /var/lib/registry/docker/registry/v2/repositories
      docker exec registry-registry-1 ls /var/lib/registry/docker/registry/v2/blobs/sha256
      ```
+
+
+## Reference
+
+* [Docker docs: *Docker Registry HTTP API V2*](https://docs.docker.com/registry/spec/api/)
