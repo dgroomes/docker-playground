@@ -60,6 +60,10 @@ General clean-ups, TODOs and things I wish to implement for this project:
   (and completely?) implements the access to content-addressable entities (layers, manifests, configs). This HTTP API
   should be legible, unlike the sometimes opaque and varied behavior of the `docker` CLI for commands like `inspect` (in
   my opinion). The registry is especially authoritative because it implements [OCI Distribution Specification](https://github.com/opencontainers/distribution-spec).
+  I'm not seeing the image layer get re-used as I expect in the `dockerfile` example. Maybe it's something to do with
+  BuildKit and not using the cache, but I'm not sure. I want to actually illustrate layer re-use. I think if I use a local
+  registry, maybe I can force this, or at least debug it. Interestingly though the file diff SHA digest is the same
+  (good).
 
 
 ## Reference
