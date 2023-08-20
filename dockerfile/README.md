@@ -89,8 +89,9 @@ General clean-ups, TODOs and things I wish to implement for this project:
   IDs. `docker image history` only shows `missing` and `docker manifest inspect` doesn't work for local images. So
   instead I exported the physical image data. Easy enough.)
   Show the image layers and the steps/instructions (what are they called?)
-* [ ] Create a "base image and extending impage" example. This is prototypical stuff. This is one of the core value
-  props of Docker.
+* [ ] Create a "base image and extending image" example. This is prototypical stuff. This is one of the core value
+  props of Docker. I'm particularly interested in what the JSON metadata files look like in the layers. I'm confused
+  about what goes in the "config" object vs. what goes in the `json` metadata file in a layer.
 
 
 ## Reference

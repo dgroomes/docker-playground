@@ -55,6 +55,8 @@ General clean-ups, TODOs and things I wish to implement for this project:
   the-shelf without having to make changes.
 * [x] DONE Create a CI build in GitHub Actions
 * [x] DONE Add a Dockerfile example
+* [ ] Consider doing a `registry` subproject. Docker supports this with an [open source registry](https://github.com/distribution/distribution),
+  very cool.  
 
 
 ## Reference
