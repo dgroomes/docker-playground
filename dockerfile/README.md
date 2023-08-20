@@ -1,55 +1,82 @@
 # dockerfile
 
-An example project that builds a simple Docker image using a Dockerfile.
+Building Docker images with `Dockerfile` files and making sense of the image content.
+
+
+## Overview
+
+The goal of this project is to gain some familiarity with building Docker images and to understand the makeup of a
+Docker image: the layers, the metadata, etc. We explore these concepts by building build a Docker image that contains
+the interpreter for the popular and expressive JSON-wrangling programming language named [`jq`](https://jqlang.github.io/jq/manual/).
+
+This image can be considered a "base image" because it's a natural foundation to build other Docker images upon that
+need `jq` installed. The project goes on to extend this image, and explore the resulting image layers and metadata using
+familiar commandline tools like `tar`.
 
 
 ## Instructions
 
 Follow these instructions to build a Docker image and run it as a container.
 
-1. *Manually* download the `jq` program:
+1. *Manually* download the `jq` interpreter:
    * Go to the [jq Download page](https://stedolan.github.io/jq/download/) and download the latest Linux 64-bit binary
    * Create a directory named `tmp/`
    * Move the binary you downloaded into `tmp/` and name the binary simply `jq` (it was likely downloaded with the name
     `jq-linux64`). It should look like this: `tmp/jq`.
-2. Build the Docker image:
+2. Build the `docker-playground/jq` Docker image:
    * ```shell
-     ./build.sh
+     ./build-base-image.sh
      ```
-3. Start a container using the image and pass it a JSON document with a special "message" field:
+   * Study the contents of that script to understand what it does.
+3. Start a container using the image and pass it a `jq` expression:
+    * ```shell
+      echo '[1, 2, 3]' | docker run -i --rm docker-playground/jq '. | add'
+      ```
+    * The container will respond with the following text printed to the terminal.
+      ```text
+      6
+      ```
+4. Build the `docker-playground/jq-echo` Docker image:
    * ```shell
-     echo '{ "message": "hello" }' | docker run -i --rm jq-echo
+     DOCKER_BUILDKIT=1 docker build --file jq-echo.Dockerfile --tag docker-playground/jq-echo .
      ```
-   * You should see a response from the container printed to the terminal! It should say:
+   * This new image builds upon the `docker-playground/jq` image. In this relationship, the `docker-playground/jq` image
+     is considered the "base image".
+5. Start a container using the image and pass it a JSON document with a special "message" field:
+   * ```shell
+     echo '{ "message": "hello" }' | docker run -i --rm docker-playground/jq-echo
+     ```
+   * You should see an echoing response from the container printed to the terminal.
      ```text
-     hello! hello!! hello!!!
+     "hello! hello!! hello!!!"
      ```
-4. Now, let's inspect the Docker image we built.
+6. Now, let's inspect the base Docker image we built.
    * ```shell
-     docker inspect jq-echo
+     docker inspect docker-playground/jq
      ```
    * It will print low-level metadata about the image in JSON form.
    * ```json5
      [
        {
-         "Id": "sha256:9222b9a5f602bacf3cae7b0530608c417fdf669e2cc52fb23b991a4be5656dd5",
+         "Id": "sha256:8e63f23d8a52505175726d4e234567652e02906334e64d9d8a12ea741bf03448",
          "RepoTags": [
-           "jq-echo:latest"
+           "docker-playground/jq:latest"
          ],
          // ... omitted ...
        }
      ]
      ```
    * This command is essential for tasks like debugging the effect of your `Dockerfile` on the built image.
-5. Let's dig deeper and unpack the physical Docker image contents.
+7. Let's dig deeper and unpack the physical Docker image contents.
    * ```shell
-     mkdir -p tmp/jq-echo-extracted
-     docker save --output tmp/jq-echo.tar jq-echo
-     tar -C tmp/jq-echo-extracted -xf tmp/jq-echo.tar
+     mkdir -p tmp/jq-extracted
+     docker save --output tmp/jq.tar docker-playground/jq
+     tar -C tmp/jq-extracted -xf tmp/jq.tar
      ```
    * The Docker image was exported as a tar, and then we extracted its contents. Browse the contents and explore. You'll
      notice that there is a directory for each of the Docker image layers. These are the file system diffs represented
-     as tar files (`layer.tar`). Extract the contents of these layers and continue exploring. 
+     as tar files (`layer.tar`). Extract the contents of these layers and continue exploring. Try repeating this process
+     for the `docker-playground/jq-echo` image too.
 
 
 ## Commentary
@@ -89,7 +116,7 @@ General clean-ups, TODOs and things I wish to implement for this project:
   IDs. `docker image history` only shows `missing` and `docker manifest inspect` doesn't work for local images. So
   instead I exported the physical image data. Easy enough.)
   Show the image layers and the steps/instructions (what are they called?)
-* [ ] Create a "base image and extending image" example. This is prototypical stuff. This is one of the core value
+* [x] DONE Create a "base image and extending image" example. This is prototypical stuff. This is one of the core value
   props of Docker. I'm particularly interested in what the JSON metadata files look like in the layers. I'm confused
   about what goes in the "config" object vs. what goes in the `json` metadata file in a layer.
 
