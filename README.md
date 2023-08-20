@@ -40,6 +40,12 @@ A Docker image that introspects Docker metadata and networking information about
 
 See the README in [introspective/](introspective/).
 
+### `registry/`
+
+This subproject illustrates how to run and use a local Docker registry.
+
+See the README in [registry/](registryregistry/).
+
 
 ## Wish List
 
@@ -55,7 +61,7 @@ General clean-ups, TODOs and things I wish to implement for this project:
   the-shelf without having to make changes.
 * [x] DONE Create a CI build in GitHub Actions
 * [x] DONE Add a Dockerfile example
-* [ ] IN PROGRESS Consider doing a `registry` subproject. Docker supports this with an [open source registry](https://github.com/distribution/distribution),
+* [x] DONE Consider doing a `registry` subproject. Docker supports this with an [open source registry](https://github.com/distribution/distribution),
   very cool. UPDATE: yes I definitely want to do this because the registry exposes an HTTP API that formally
   (and completely?) implements the access to content-addressable entities (layers, manifests, configs). This HTTP API
   should be legible, unlike the sometimes opaque and varied behavior of the `docker` CLI for commands like `inspect` (in

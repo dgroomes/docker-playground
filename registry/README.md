@@ -1,7 +1,5 @@
 # registry
 
-NOT YET FULLY IMPLEMENTED
-
 This subproject illustrates how to run and use a local Docker registry.
 
 
@@ -56,7 +54,16 @@ Follow these instructions to host and interact a local Docker registry.
    * ```shell
      curl -X GET http://localhost:5000/v2/my-busybox/blobs/sha256:fc9db2894f4e4b8c296b8c9dab7e18a6e78de700d21bc0cfaf5c78484226db9c
      ```
-5. When finished, stop the registry
+   * Next, let's explore how image layers are re-used in the ecosystem by extending from the `my-busybox:latest` image. 
+5. Build and push the custom Docker image
+   * ```shell
+     docker build -t localhost:5000/my-busybox-extended .
+     docker push localhost:5000/my-busybox-extended
+     ```
+6. Inspect the image layers
+   * Follow the same HTTP API requests that we made earlier. The `my-busybox-extended` image should use the same layers
+     as the `my-busybox` image except for the last layer which is where we added the `epoch.sh` script.
+7. When finished, stop the registry
    * ```shell
      docker compose down
      ```
@@ -70,9 +77,9 @@ General clean-ups, TODOs and things I wish to implement for this project:
 * [x] DONE Scaffold the project
 * [x] DONE Copy a Docker image from the public Docker Hub to the local registry. This is basically what the example in the
   [official docs](https://docs.docker.com/registry/deploying/) does. 
-* [ ] Build a Docker image. Push it to the registry and pull it from the registry.
+* [x] DONE Build a Docker image. Push it to the registry and pull it from the registry.
 * [x] DONE Showcase the HTTP API. List images, get a manifest, etc.
-* [ ] Illustrate the "base image" and "extending image" prototypical use case and make sure image layers are actually
+* [x] OBSOLETE (I'm using the busybox image as a base image. It has the same effect) Illustrate the "base image" and "extending image" prototypical use case and make sure image layers are actually
   re-used. This is my main goal for this subproject.
 * [x] DONE What kind of database is the registry using? Can we connect to it and query it?
    * It looks like it just writes to files. Let's connect and explore.
@@ -83,6 +90,7 @@ General clean-ups, TODOs and things I wish to implement for this project:
      docker exec registry-registry-1 ls /var/lib/registry/docker/registry/v2/repositories
      docker exec registry-registry-1 ls /var/lib/registry/docker/registry/v2/blobs/sha256
      ```
+* [ ] Explore what changes when you use BuildKit. I'm suspicious about the layers. I think they get squashed (a good thing mostly).
 
 
 ## Reference
