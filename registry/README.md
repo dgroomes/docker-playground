@@ -90,8 +90,11 @@ General clean-ups, TODOs and things I wish to implement for this project:
      docker exec registry-registry-1 ls /var/lib/registry/docker/registry/v2/repositories
      docker exec registry-registry-1 ls /var/lib/registry/docker/registry/v2/blobs/sha256
      ```
-* [ ] Explore what changes when you use BuildKit. I'm suspicious about the layers. I think they get squashed (a good thing mostly).
-
+* [x] SKIP (Nvm, we're already using BuildKit by default. I was confused by IDs that I thought were cryptographic IDs
+  but were not. Also the `application/vnd.docker.image.rootfs.diff.tar.gzip` IS NOT an ID for the tar file diff but instead
+  the layer ID cryptographic hash (where the layer is backed by a tar file). OCI solves this by using the term layer and
+  a better name: [application/vnd.oci.image.layer.v1.tar+gzip](https://github.com/opencontainers/image-spec/blob/main/media-types.md#applicationvndociimagelayerv1targzip)). Explore what changes when you use BuildKit. I'm suspicious about the layers. I think they get squashed (a good thing mostly).
+* [ ] Push images as OCI instead of Docker packaging?
 
 ## Reference
 

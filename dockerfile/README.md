@@ -114,7 +114,10 @@ General clean-ups, TODOs and things I wish to implement for this project:
 * [ ] Create a GitHub Actions CI workflow to build the image and run the example.
 * [x] DONE (Well, the `docker` command can show you the config object, but I can't figure out how to make it show layer
   IDs. `docker image history` only shows `missing` and `docker manifest inspect` doesn't work for local images. So
-  instead I exported the physical image data. Easy enough.)
+  instead I exported the physical image data. Easy enough. UPDATE: actually this is not that great. The exported files
+  also do not show the cryptographic layer ID even though I thought they did for a while. I got pretty turned around.
+  Basically, if you don't see the `sha256:` prefix, then it's not a cryptographic ID but some other ID. I went and did
+  the `registry` subproject and that's making the world make sense. The OCI registry API spec is nice.)
   Show the image layers and the steps/instructions (what are they called?)
 * [x] DONE Create a "base image and extending image" example. This is prototypical stuff. This is one of the core value
   props of Docker. I'm particularly interested in what the JSON metadata files look like in the layers. I'm confused
