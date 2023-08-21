@@ -57,7 +57,7 @@ Follow these instructions to host and interact a local Docker registry.
    * Next, let's explore how image layers are re-used in the ecosystem by extending from the `my-busybox:latest` image. 
 5. Build and push the custom Docker image
    * ```shell
-     docker build -t localhost:5000/my-busybox-extended .
+     docker build --tag localhost:5000/my-busybox-extended --output type=image,oci-mediatypes=true .
      docker push localhost:5000/my-busybox-extended
      ```
 6. Inspect the image layers
@@ -94,7 +94,10 @@ General clean-ups, TODOs and things I wish to implement for this project:
   but were not. Also the `application/vnd.docker.image.rootfs.diff.tar.gzip` IS NOT an ID for the tar file diff but instead
   the layer ID cryptographic hash (where the layer is backed by a tar file). OCI solves this by using the term layer and
   a better name: [application/vnd.oci.image.layer.v1.tar+gzip](https://github.com/opencontainers/image-spec/blob/main/media-types.md#applicationvndociimagelayerv1targzip)). Explore what changes when you use BuildKit. I'm suspicious about the layers. I think they get squashed (a good thing mostly).
-* [ ] Push images as OCI instead of Docker packaging?
+* [x] ABANDON (I tried the [example command](https://docs.docker.com/build/exporters/#oci-media-types) verbatim and
+  while it built and pushed the image (clearly respecting those parts of the `--output` arg), I don't see OCI mediatypes
+  on the registry HTTP response for this manifest. I see the 'docker' ones. I even tried creating an image `from scratch`) Push images as OCI instead of Docker packaging?
+  * See <https://docs.docker.com/build/exporters/oci-docker/>.
 
 ## Reference
 
