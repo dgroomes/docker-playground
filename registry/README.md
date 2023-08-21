@@ -16,7 +16,7 @@ Follow these instructions to host and interact a local Docker registry.
 
 1. Run a local Docker registry
    * ```shell
-     docker compose up
+     docker compose up --renew-anon-volumes
      ```
    * Do not use the `--detach` option because we want to see the HTTP access logs. While they are a little hard to make
      sense of at first glance, they tell a lot about what is going on when you push and pull Docker images.
@@ -42,7 +42,7 @@ Follow these instructions to host and interact a local Docker registry.
    * ```shell
      curl -X GET http://localhost:5000/v2/my-busybox/tags/list
      ```
-   * Get the manifest for the `my-busybox:latest` tag. Take care to request the v2 manifest schema.
+   * Get the manifest for the `my-busybox:latest` tag. Take care to request the v2 manifest schema 2.
    * ```shell
      curl -X GET http://localhost:5000/v2/my-busybox/manifests/latest -H "Accept: application/vnd.docker.distribution.manifest.v2+json"
      ```
