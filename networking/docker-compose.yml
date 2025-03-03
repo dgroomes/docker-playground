@@ -1,0 +1,22 @@
+services:
+
+  sequestered:
+    build:
+      dockerfile: sequestered.Dockerfile
+    networks:
+      - internal-network  # ONLY connected to internal network (no internet)
+    stdin_open: true
+    tty: true
+    entrypoint: /bin/bash
+
+  proxy:
+    build:
+      dockerfile: proxy.Dockerfile
+    networks:
+      - external-network
+      - internal-network
+
+networks:
+  external-network: # When omitting any specific configurations, the network gets internet access
+  internal-network:
+    internal: true # Forbid external access

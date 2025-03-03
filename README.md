@@ -16,11 +16,13 @@ re-using the code.
 
 The subprojects include:
 
+
 ### `basic/`
 
 A basic "hello world" example of Docker that starts a container, executes a command inside of it, then stops it.
 
 See the README in [basic/](basic/).
+
 
 ### `compose/`
 
@@ -28,11 +30,13 @@ A simple Docker Compose example.
 
 See the README in [compose/](compose/).
 
+
 ### `dockerfile/`
 
 An example project that builds a simple Docker image using a Dockerfile.
 
 See the README in [dockerfile/](dockerfile/).
+
 
 ### `introspective/`
 
@@ -40,11 +44,19 @@ A Docker image that introspects Docker metadata and networking information about
 
 See the README in [introspective/](introspective/).
 
+
 ### `registry/`
 
 This subproject illustrates how to run and use a local Docker registry.
 
-See the README in [registry/](registryregistry/).
+See the README in [registry/](registry/).
+
+
+### `networking/`
+
+Exploring container networking with a proxy example.
+
+See the README in [networking/](networking/).
 
 
 ## Wish List
@@ -70,6 +82,9 @@ General clean-ups, TODOs and things I wish to implement for this project:
   BuildKit and not using the cache, but I'm not sure. I want to actually illustrate layer re-use. I think if I use a local
   registry, maybe I can force this, or at least debug it. Interestingly though the file diff SHA digest is the same
   (good).
+* [x] DONE Networking restrictions. While learning about Claude Code, I want to learn how to restrict a container's network
+  access (I'm not saying I need perfection here, just a good start, remember "security in depth"). Can I use Docker
+  native features or do I need to stuff inside the container's own controls (e.g. its own firewall rule stuff)?
 
 
 ## Reference
