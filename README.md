@@ -31,6 +31,13 @@ A simple Docker Compose example.
 See the README in [compose/](compose/).
 
 
+### `docker-in-docker/`
+
+Running Docker containers inside of Docker containers. Also known as Docker-in-Docker (DinD).
+
+See the README in [docker-in-docker/](docker-in-docker/).
+
+
 ### `dockerfile/`
 
 An example project that builds a simple Docker image using a Dockerfile.
@@ -85,6 +92,7 @@ General clean-ups, TODOs and things I wish to implement for this project:
 * [x] DONE Networking restrictions. While learning about Claude Code, I want to learn how to restrict a container's network
   access (I'm not saying I need perfection here, just a good start, remember "security in depth"). Can I use Docker
   native features or do I need to stuff inside the container's own controls (e.g. its own firewall rule stuff)?
+* [x] DONE "Docker in docker" sub-project.
 
 
 ## Reference
