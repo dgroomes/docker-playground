@@ -33,7 +33,7 @@ See the README in [compose/](compose/).
 
 ### `docker-in-docker/`
 
-Running Docker containers inside of Docker containers. Also known as Docker-in-Docker (DinD).
+Running Docker containers inside of Docker containers. Often referred to as DinD (Docker-in-Docker).
 
 See the README in [docker-in-docker/](docker-in-docker/).
 

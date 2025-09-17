@@ -1,0 +1,7 @@
+FROM debian:12
+
+WORKDIR /app
+
+COPY runs-on-nested-container.sh .
+
+ENTRYPOINT ["./runs-on-nested-container.sh"]
