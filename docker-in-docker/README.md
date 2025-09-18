@@ -65,7 +65,7 @@ Follow these instructions to run a Docker-in-Docker example.
       (host) Hello from my-MacBook.local
       (first-level-container) Hello from ee9374dd575e
       (nested-container) Hello from 230aec7e51cb
-      ````
+      ```
 
 
 ## Wish List
