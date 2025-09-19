@@ -1,6 +1,0 @@
-# Extend from the custom Docker-in-Docker image defined in this project.
-FROM docker-playground/docker-in-docker-dind:local
-
-WORKDIR /app
-
-COPY runs-on-first-level-container.sh .
