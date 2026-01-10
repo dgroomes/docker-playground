@@ -57,7 +57,7 @@ Follow these instructions to run the Docker-in-Docker example.
 6. Start the Docker engine
     - While still inside the container, run the following command.
     - ```shell
-      dockerd --host=unix:///var/run/docker.sock &
+      dockerd --host=unix:///var/run/docker.sock --storage-driver=native &
       ```
     - Wait a moment for the engine to initialize. You'll see startup messages from the daemon. When it's settled, you can verify that the daemon is running by running `docker version`. It should look something like the following.
     - ```text
@@ -115,3 +115,17 @@ General clean-ups, TODOs and things I wish to implement for this project:
   because it's a dependency and not core to the demo. I might just unbundle the 'runs-on-host.sh' into just instructions
   and smaller scripts.
 - [x] DONE (this task turned into reshaping into a more interactive demo) The DinD image is so slight now that it might as well be inlined into the first-level image for the sake of a smaller demo footprint.
+- [x] DONE It's broken. Not sure what changed between b1ccf9bf1bb3b45a960706cafa5bd17148fd5210 and now.
+   - ```text
+     root@8e6173e4468b:/app/temp# docker run --rm --mount type=bind,source=/app,target=/app --workdir /app debian:12-slim ./hello.sh
+     ERRO[2026-01-10T17:56:03.865279262Z] Error saving dying container to disk: invalid output path: stat /var/lib/docker/containers/eb91d4138f46f0303f94ddc028388388f6d26c3b2fb7b15bf1197dc8c077c1c3: no such file or directory
+     ERRO[2026-01-10T17:56:03.865426221Z] Handler for POST /v1.52/containers/create returned error: failed to mount /tmp/containerd-mount4057760532: mount source: "overlay", target: "/tmp/containerd-mount4057760532", fstype: overlay, flags: 0, data: "workdir=/var/lib/docker/containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/5/work,upperdir=/var/lib/docker/containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/5/fs,lowerdir=/var/lib/docker/containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1/fs,index=off", err: invalid argument
+     docker: Error response from daemon: failed to mount /tmp/containerd-mount4057760532: mount source: "overlay", target: "/tmp/containerd-mount4057760532", fstype: overlay, flags: 0, data: "workdir=/var/lib/docker/containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/5/work,upperdir=/var/lib/docker/containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/5/fs,lowerdir=/var/lib/docker/containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1/fs,index=off", err: invalid argument
+     ```
+   - I don't know how I got this to work before. I wonder if I had some stateful thing going on while creating later iterations and earlier state was still being used in what I thought was the final thing.
+   - Update: it looks like an "overlay on overlay" issue and this caused by a default behavior change between Docker 28 and Docker 29. <https://github.com/docker/cli/issues/6646#issuecomment-3518152318> (amazing answer; thank you as always thaJeztah)
+   - DONE Research and fix. Ok for now we can just use `--storage-driver=native`. This issue relates to the idea of storage and my earlier item about "where do the images go?". So I'll keep that item open for a "better" solution.
+- [ ] Figure out the cgroupsv2 stuff. The demo works but I'm getting a message:
+    - ```text
+      level=error msg="failed to enable controllers ([cpuset cpu io memory hugetlb pids rdma])" error="failed to write subtree controllers [cpuset cpu io memory hugetlb pids rdma] to \"/sys/fs/cgroup/docker/cgroup.subtree_control\": write /sys/fs/cgroup/docker/cgroup.subtree_control: no such file or directory" runtime=io.containerd.runc.v2
+      ```

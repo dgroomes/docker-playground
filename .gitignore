@@ -1,3 +1,5 @@
 .idea/
 .DS_Store
 docker-in-docker/log.txt
+CLAUDE.md
+AGENTS.md
