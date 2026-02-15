@@ -200,6 +200,7 @@ General clean-ups, TODOs and things I wish to implement for this project:
     - ```text
       level=error msg="failed to enable controllers ([cpuset cpu io memory hugetlb pids rdma])" error="failed to write subtree controllers [cpuset cpu io memory hugetlb pids rdma] to \"/sys/fs/cgroup/docker/cgroup.subtree_control\": write /sys/fs/cgroup/docker/cgroup.subtree_control: no such file or directory" runtime=io.containerd.runc.v2
       ```
+- [ ] Remove docker-in-docker example and instead replace with a more foundational tech "cgroups" example in my linux-playground. Docker tech is fragile trivia. Linux is more foundational (and will more likely stick in my memory).
 
 
 [docker-library-docker]: https://github.com/docker-library/docker
