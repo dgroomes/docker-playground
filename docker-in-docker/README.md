@@ -5,6 +5,8 @@ Running Docker containers inside of Docker containers. Often referred to as DinD
 
 ## Overview
 
+**NOTE**: This project is designed for my own personal use.
+
 We try to avoid too much inception in our software systems, but sometimes it's necessary. Docker-in-Docker is one of
 those things. I need to better understand how it works, the moving parts, the security implications, the Linux-y
 details, etc.
@@ -17,9 +19,10 @@ a Docker container building and running another Docker container. For me, the in
 In principle, DinD is easy, but there is a lot of Linux and Docker trivia involved in cutting through the noise,
 revealing the core principles, and getting it to work. I learned from these sources:
 
-- https://github.com/docker-library/docker
-- https://github.com/moby/moby/tree/master/hack
-- https://github.com/devcontainers/features/tree/main/src/docker-in-docker
+- The repo for the `docker` Docker image at [docker-library/docker][docker-library-docker] on GitHub.
+- The [hack/][moby-hack] directory of the `moby/moby` repo. Specifically the `dind` shell script.
+- The [Docker-in-Docker *feature*][devcontainers-dind] of the DevContainers project.
+- The [cgroup v2 documentation][control-group-v2-docs] from the Linux kernel docs.
 
 Keep in mind these processes that make up the example. It can get a little confusing:
 
@@ -63,12 +66,12 @@ Follow these instructions to run the Docker-in-Docker example.
     - ```text
       root@ceaee29a2c14:/app# docker version
       Client: Docker Engine - Community
-       Version:           28.4.0
+       Version:           29.2.1
        ...
       
       Server: Docker Engine - Community
        Engine:
-        Version:          28.4.0
+        Version:          29.2.1
       ```
 7. Run a nested container and say hello from it 
     - While still inside the first-level container, run the following command.
@@ -80,11 +83,78 @@ Follow these instructions to run the Docker-in-Docker example.
         ./hello.sh
       ```
     - This takes a moment to download the `debian:12-slim` image. Then it runs it. This is Docker-in-Docker in action!
-8. Exit the first-level container
+    - You may have noticed an error message in the Docker daemon output:
+    - ```text
+      level=error msg="failed to enable controllers ([cpuset cpu io memory hugetlb pids rdma])" error="failed to write subtree controllers..."
+      ```
+    - This is a [cgroups v2][control-group-v2-docs] issue. In cgroups v2, a cgroup cannot have both controllers enabled *and* processes running directly in it (the ["No Internal Process Constraint"][no-internal-process-constraint]). The root cgroup had our shell process running in it, which prevented Docker from enabling controllers for its child cgroups. Let's explore how to work within the cgroups v2 rules and avoid this error.
+8. Explore the cgroups configuration
+    - cgroups is a hierarchical system. See which processes are in the _root_ cgroup with the following command.
+    - ```shell
+      cat /sys/fs/cgroup/cgroup.procs
+      ```
+    - You'll see at least two PIDs: the shell (PID 1) and the Docker daemon. Cross-reference these PIDs with `ps`.
+    - Check available controllers:
+    - ```shell
+      cat /sys/fs/cgroup/cgroup.controllers
+      ```
+    - Check which controllers are enabled for subtrees (Docker managed to enable some):
+    - ```shell
+      cat /sys/fs/cgroup/cgroup.subtree_control
+      ```
+    - In my case, it showed:
+    - ```text
+      cpuset cpu pids
+      ```
+9. Fix the cgroups configuration
+    - First, stop the Docker daemon:
+    - ```shell
+      pkill dockerd
+      ```
+    - Wait a moment for it to stop. You can verify with `ps aux | grep docker`.
+    - Remove the `docker` cgroup that dockerd created (it must be empty before we can disable controllers):
+    - ```shell
+      rmdir /sys/fs/cgroup/docker
+      ```
+    - Disable the subtree controllers (prefix each with `-` to disable):
+    - ```shell
+      echo '-cpuset -cpu -pids' > /sys/fs/cgroup/cgroup.subtree_control
+      ```
+    - Create an "init" cgroup (the name is just a convention, it could be anything):
+    - ```shell
+      mkdir /sys/fs/cgroup/init
+      ```
+    - Move the shell process (PID 1) to the init cgroup:
+    - ```shell
+      echo 1 > /sys/fs/cgroup/init/cgroup.procs
+      ```
+    - Now enable all available controllers for subtrees:
+    - ```shell
+      echo '+cpuset +cpu +io +memory +hugetlb +pids +rdma' > /sys/fs/cgroup/cgroup.subtree_control
+      ```
+    - Verify the controllers are now enabled:
+    - ```shell
+      cat /sys/fs/cgroup/cgroup.subtree_control
+      ```
+10. Restart the Docker engine
+    - ```shell
+      dockerd --host=unix:///var/run/docker.sock --storage-driver=native &
+      ```
+    - This time you should see no "failed to enable controllers" errors!
+11. Run the nested container again
+    - ```shell
+      docker run --rm \
+        --mount type=bind,source=/app,target=/app \
+        --workdir /app \
+        debian:12-slim \
+        ./hello.sh
+      ```
+    - Success! No cgroups errors this time.
+12. Exit the first-level container
     - ```shell
       exit
       ```
-9. Check the results
+13. Check the results
     - ```shell
       cat log.txt
       ```
@@ -93,8 +163,9 @@ Follow these instructions to run the Docker-in-Docker example.
       Hello from my-MacBook.local
       Hello from 8cc254cd0c1c
       Hello from 2ce724f2419d
+      Hello from f1a2b3c4d5e6
       ```
-    - Each line represents execution at a different level: host, first-level container, and nested container. They each write to the same file through bind mounts.
+    - Each line represents execution at a different level: host, first-level container, and nested containers (run twice). They each write to the same file through bind mounts.
 
 
 ## Wish List
@@ -125,7 +196,14 @@ General clean-ups, TODOs and things I wish to implement for this project:
    - I don't know how I got this to work before. I wonder if I had some stateful thing going on while creating later iterations and earlier state was still being used in what I thought was the final thing.
    - Update: it looks like an "overlay on overlay" issue and this caused by a default behavior change between Docker 28 and Docker 29. <https://github.com/docker/cli/issues/6646#issuecomment-3518152318> (amazing answer; thank you as always thaJeztah)
    - DONE Research and fix. Ok for now we can just use `--storage-driver=native`. This issue relates to the idea of storage and my earlier item about "where do the images go?". So I'll keep that item open for a "better" solution.
-- [ ] Figure out the cgroupsv2 stuff. The demo works but I'm getting a message:
+- [x] DONE (so hard) Figure out the cgroupsv2 stuff. The demo works but I'm getting a message:
     - ```text
       level=error msg="failed to enable controllers ([cpuset cpu io memory hugetlb pids rdma])" error="failed to write subtree controllers [cpuset cpu io memory hugetlb pids rdma] to \"/sys/fs/cgroup/docker/cgroup.subtree_control\": write /sys/fs/cgroup/docker/cgroup.subtree_control: no such file or directory" runtime=io.containerd.runc.v2
       ```
+
+
+[docker-library-docker]: https://github.com/docker-library/docker
+[moby-hack]: https://github.com/moby/moby/tree/master/hack
+[devcontainers-dind]: https://github.com/devcontainers/features/tree/main/src/docker-in-docker
+[control-group-v2-docs]: https://docs.kernel.org/admin-guide/cgroup-v2.html
+[no-internal-process-constraint]: https://docs.kernel.org/admin-guide/cgroup-v2.html#no-internal-process-constraint
